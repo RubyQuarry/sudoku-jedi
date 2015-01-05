@@ -1,4 +1,5 @@
 # SudokuSolver
+[![Build Status](https://travis-ci.org/RubyQuarry/sudoku_solver.svg?branch=master)](https://travis-ci.org/RubyQuarry/sudoku_solver)
 
 TODO: Write a gem description
 
