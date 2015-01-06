@@ -4,4 +4,5 @@ describe Cell do
   it "#num" do
     expect(cell.num).to eql(234)
   end
+  
 end
