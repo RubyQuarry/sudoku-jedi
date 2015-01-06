@@ -1,4 +1,5 @@
 class Container
+  extend Forwardable
   
   attr_accessor :arr 
   def initialize(arr)
