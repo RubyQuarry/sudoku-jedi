@@ -1,7 +1,15 @@
 require 'spec_helper'
 
 describe Grid do
-  let(:grid) { Grid.new(%w{050400716 409061200 106205400 007046035 680390007 940050680 091003024 060904501 704510060})}
+  let(:grid) { Grid.new(%w{050400716
+                           409061200 
+                           106205400 
+                           007046035 
+                           680390007 
+                           940050680
+                           091003024
+                           060904501 
+                           704510060})}
   context "#load" do
     it "box inits" do
       expect(grid.boxes.inject([]) { |sum, a| sum += a.arr }).to eql(%w{0 5 0 4 0 9 1 0 6
