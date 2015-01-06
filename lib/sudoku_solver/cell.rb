@@ -3,7 +3,4 @@ class Cell
   def initialize(num)
     @num = num
   end
-  def hello
-    
-  end
 end

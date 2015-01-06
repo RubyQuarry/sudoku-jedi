@@ -1,13 +1,4 @@
 require_relative 'container'
-class Box
-  extend Container 
+class Box < Container 
   attr_accessor :box
-  def initialize(arr)
-    @box = arr
-  end
-
-  def difference
-    Box.difference(@box)
-  end
-  
 end
