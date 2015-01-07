@@ -32,4 +32,41 @@ class Grid
       end
     end 
   end
+
+  def cross_hatching(box_num, num)
+    remain = @boxes[box_num].difference
+    box = @boxes[box_num].arr.each_slice(3).map{ |a| a }
+    row_start = (box_num / 3) * 3 
+    row_end = row_start + 3
+    c_rows = @rows[row_start...row_end]
+    cols_start = ( box_num % 3) * 3
+    cols_end = cols_start + 3   
+    c_cols = @columns[cols_start...cols_end]
+    
+    possible = []
+    remain.each do |num|
+      3.times do |a|
+        3.times do |b|
+          if box[a][b] == 0
+           #puts c_rows[a].arr.to_s
+            if !c_rows[a].contain?(num) && !c_cols[b].contain?(num)     
+              possible << [a,b]
+              puts "#{num} is possible in #{a},#{b}"
+            end
+          end
+        end
+      end
+      if possible.count == 1
+         x, y =  possible.first 
+         box[x][y] = num 
+         @boxes[box_num].arr[(x * 3) + y] = num
+         c_rows[x].arr[(box_num % 3) * 3 + x] = num   
+         c_cols[y].arr[(box_num / 3) * 3 + y] = num 
+      end
+      possible.clear
+    end
+    puts @columns.to_s
+    return box 
+  end
+
 end

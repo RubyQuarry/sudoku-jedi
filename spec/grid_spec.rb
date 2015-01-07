@@ -20,7 +20,7 @@ describe Grid do
                                                                         0 3 5 0 0 7 6 8 0 
                                                                         0 9 1 0 6 0 7 0 4
                                                                         0 0 3 9 0 4 5 1 0 
-                                                                        0 2 4 5 0 1 0 6 0})
+                                                                        0 2 4 5 0 1 0 6 0}.map(&:to_i))
     end
 
     it "row_init" do
@@ -32,7 +32,7 @@ describe Grid do
                                                                        9 4 0 0 5 0 6 8 0 
                                                                        0 9 1 0 0 3 0 2 4 
                                                                        0 6 0 9 0 4 5 0 1 
-                                                                       7 0 4 5 1 0 0 6 0 })
+                                                                       7 0 4 5 1 0 0 6 0 }.map(&:to_i))
     end
   it "column_init" do
       expect(grid.columns.inject([]) { |sum, a| sum += a.arr }).to eql(%w{0 4 1 0 6 9 0 0 7  
@@ -43,7 +43,13 @@ describe Grid do
                                                                           0 1 5 6 0 0 3 4 0
                                                                           7 2 4 0 0 6 0 5 0
                                                                           1 0 0 3 0 8 2 0 6 
-                                                                          6 0 0 5 7 0 4 1 0 })
+                                                                          6 0 0 5 7 0 4 1 0 }.map(&:to_i))
     end 
+  end
+
+  context "cross hatching" do
+    it "basic solves" do
+      expect(grid.cross_hatching(7,3)).to eql([[6,0,3],[9,0,4],[5,1,0]])
+    end
   end
 end
