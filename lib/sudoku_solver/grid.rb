@@ -1,7 +1,7 @@
 require_relative 'box'
 
 class Grid
-  attr_accessor :rows, :columns, :boxes
+  attr_accessor :rows, :columns, :boxes, :remaining_nums
   def initialize(txt_file)
     @rows = Array.new(9) { Row.new([] ) }
     @columns = Array.new(9) { Column.new([]) }
@@ -37,8 +37,17 @@ class Grid
     !@rows.inject([]) { |sum, a| sum += a.arr }.include? 0
   end
 
+  def blank
+    @rows.each_with_index do |row, index|
+      row.each_with_index do |elem, ind|
+        Box.new(ind, index) if elem != 0
+      end
+    end
+  end
+
   def cross_hatching(box_num)
     remain = boxes[box_num].difference
+    return if remain.count == 0
     box = boxes[box_num].arr.each_slice(3).map{ |a| a }
     row_start = (box_num / 3) * 3 
     row_end = row_start + 3
@@ -77,5 +86,10 @@ class Grid
       num += 1
     end
   end
+
+  def x_wing
+
+  end
+
 
 end

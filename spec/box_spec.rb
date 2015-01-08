@@ -1,6 +1,13 @@
 require 'spec_helper'
 describe Box do 
-  let(:box) { Box.new([1,2,4,5,6,7,8,9])}
+  let(:box) { Box.new([1,2,4,5,6,7,8,9], 0, 5)}
+  context "Coordinates" do 
+    it "is correct" do 
+      expect(box.blank_spaces).to eql([1, 0, 5])
+      @let_box = Box.new([], 8, 8)
+      expect(@let_box.blank_spaces).to eql([8, 8, 8])
+    end
+  end
   context "#differance" do
     it "shows the incorrect differance" do
       expect(box.difference).to_not eql(Array(5..9))

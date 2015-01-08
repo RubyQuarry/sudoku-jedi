@@ -1,6 +1,6 @@
 class Container
   
-  attr_accessor :arr 
+  attr_accessor :arr, :remaining_blocks  
   def initialize(arr)
     @arr = arr
   end
@@ -22,6 +22,10 @@ class Container
     complete 
     arr.include? num
   end
+
+  def pencil_in
+  end
+
 
   def complete 
     if remaining.count == 1
