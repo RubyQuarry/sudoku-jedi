@@ -49,21 +49,35 @@ describe Grid do
 
   context "cross hatching" do
     it "basic solves" do
-      expect(grid.cross_hatching(7,3)).to eql([[6,0,3],[9,0,4],[5,1,0]])
+      expect(grid.cross_hatching(7)).to eql([[6,0,3],[9,0,4],[5,1,0]])
       expect(grid.rows[6].arr).to eql([0,9,1,6,0,3,0,2,4])
       expect(grid.columns[3].arr).to eql([4,0,2,0,3,0,6,9,5])
+    end
+    it "does not bug out" do
+      grid.cross_hatching(3)
+      expect(grid.boxes[3].arr).to eql([0,1,7,6,8,5,9,4,3])
     end
 
   end
 
 
   context "complet game" do 
-    it "is solved" do
+    it "is NOT solved" do
       expect(grid.complete?).to eql(false)
     end
 
-    it "is NOT solved" do 
-
+    it "is solved" do 
+      grid.solve
+      expect(grid.complete?).to eql(true)
+      expect(grid.rows.inject([]) { |sum, a| sum += a.arr }).to eql(%w{8 5 2 4 3 9 7 1 6
+                                                                       4 3 9 7 6 1 2 5 8
+                                                                       1 7 6 2 8 5 4 9 3 
+                                                                       2 1 7 8 4 6 9 3 5
+                                                                       6 8 5 3 9 2 1 4 7  
+                                                                       9 4 3 1 5 7 6 8 2 
+                                                                       5 9 1 6 7 3 8 2 4 
+                                                                       3 6 8 9 2 4 5 7 1 
+                                                                       7 2 4 5 1 8 3 6 9 }.map(&:to_i))
     end
   end
 end

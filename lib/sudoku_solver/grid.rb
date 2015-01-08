@@ -14,20 +14,20 @@ class Grid
   def box_init(txt_file)
     txt_file.each.with_index do |txt, ind|
        txt.split("").each_slice(3).with_index do |slice, index|
-         @boxes[index + (ind / 3) * 3].arr += slice
+         @boxes[index + (ind / 3) * 3].arr += slice.map(&:to_i)
        end
      end
   end
 
   def row_init(txt_file)
      txt_file.each.with_index do |txt, ind|
-       @rows[ind].arr += txt.split("")
+       @rows[ind].arr += txt.split("").map(&:to_i)
      end
   end
 
   def column_init(txt_file)
     txt_file.each.with_index do |txt, ind|
-      txt.split("").each.with_index do |text, index|
+      txt.split("").map(&:to_i).each.with_index do |text, index|
         @columns[index].arr << text 
       end
     end 
@@ -37,15 +37,15 @@ class Grid
     !@rows.inject([]) { |sum, a| sum += a.arr }.include? 0
   end
 
-  def cross_hatching(box_num, num)
-    remain = @boxes[box_num].difference
-    box = @boxes[box_num].arr.each_slice(3).map{ |a| a }
+  def cross_hatching(box_num)
+    remain = boxes[box_num].difference
+    box = boxes[box_num].arr.each_slice(3).map{ |a| a }
     row_start = (box_num / 3) * 3 
     row_end = row_start + 3
-    c_rows = @rows[row_start...row_end]
+    c_rows = rows[row_start...row_end]
     cols_start = ( box_num % 3) * 3
     cols_end = cols_start + 3   
-    c_cols = @columns[cols_start...cols_end]
+    c_cols = columns[cols_start...cols_end]
     
     possible = []
     remain.each do |num|
@@ -61,13 +61,21 @@ class Grid
       if possible.count == 1
          x, y = possible.first 
          box[x][y] = num 
-         @boxes[box_num].arr[(x * 3) + y] = num
-         c_rows[x].arr[(box_num % 3) * 3 + x] = num   
-         c_cols[y].arr[(box_num / 3) * 3 + y] = num 
+         boxes[box_num].arr[(x * 3) + y] = num
+         c_rows[x].arr[(box_num % 3) * 3 + y] = num   
+         c_cols[y].arr[(box_num / 3) * 3 + x] = num 
       end
       possible.clear
     end
-    return box 
+    box 
+  end
+   
+  def solve
+    num = 0
+    until complete?
+      cross_hatching(num % 9)
+      num += 1
+    end
   end
 
 end
