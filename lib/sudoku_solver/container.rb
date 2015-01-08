@@ -16,4 +16,10 @@ class Container
   def contain?(num)
     arr.include? num
   end
+
+  def complete 
+    if difference.size == 1
+      arr.map { |elem| elem == 0 ? difference.first : elem }
+    end
+  end
 end
