@@ -6,6 +6,11 @@ class Container
   end
   # Find the missing elements in the section
   def difference 
+    complete 
+    remaining 
+  end
+
+  def remaining
     Array(1..9) - arr
   end
 
@@ -14,12 +19,13 @@ class Container
   end
 
   def contain?(num)
+    complete 
     arr.include? num
   end
 
   def complete 
-    if difference.size == 1
-      arr.map { |elem| elem == 0 ? difference.first : elem }
+    if remaining.count == 1
+      arr.map { |elem| elem == 0 ? remaining.first : elem }
     end
   end
 end
