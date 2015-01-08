@@ -9,7 +9,7 @@ Solves basic sudoku puzzles in a flash!
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'sudoku_solver'
+gem 'sudoku-jedi'
 ```
 
 And then execute:
