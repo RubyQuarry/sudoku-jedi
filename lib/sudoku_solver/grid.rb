@@ -43,7 +43,6 @@ class Grid
     cols_end = cols_start + 3   
     c_cols = @columns[cols_start...cols_end]
     
-    puts c_rows.to_s
     possible = []
     remain.each do |num|
       3.times do |a|

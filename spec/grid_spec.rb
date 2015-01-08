@@ -50,6 +50,9 @@ describe Grid do
   context "cross hatching" do
     it "basic solves" do
       expect(grid.cross_hatching(7,3)).to eql([[6,0,3],[9,0,4],[5,1,0]])
+      expect(grid.rows[6].arr).to eql([0,9,1,6,0,3,0,2,4])
+      expect(grid.columns[3].arr).to eql([4,0,2,0,3,0,6,9,5])
     end
+
   end
 end
