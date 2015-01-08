@@ -14,6 +14,6 @@ class Container
   end
 
   def contain?(num)
-    @arr.include? num
+    arr.include? num
   end
 end

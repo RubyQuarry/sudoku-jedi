@@ -43,21 +43,20 @@ class Grid
     cols_end = cols_start + 3   
     c_cols = @columns[cols_start...cols_end]
     
+    puts c_rows.to_s
     possible = []
     remain.each do |num|
       3.times do |a|
         3.times do |b|
           if box[a][b] == 0
-           #puts c_rows[a].arr.to_s
             if !c_rows[a].contain?(num) && !c_cols[b].contain?(num)     
               possible << [a,b]
-              puts "#{num} is possible in #{a},#{b}"
             end
           end
         end
       end
       if possible.count == 1
-         x, y =  possible.first 
+         x, y = possible.first 
          box[x][y] = num 
          @boxes[box_num].arr[(x * 3) + y] = num
          c_rows[x].arr[(box_num % 3) * 3 + x] = num   
@@ -65,7 +64,6 @@ class Grid
       end
       possible.clear
     end
-    puts @columns.to_s
     return box 
   end
 

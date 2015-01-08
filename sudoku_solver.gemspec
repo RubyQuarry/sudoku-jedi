@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'sudoku_solver/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "sudoku_solver"
+  spec.name          = "sudoku_jedi"
   spec.version       = SudokuSolver::VERSION
   spec.authors       = ["ajn123"]
   spec.email         = ["ajn123@vt.edu"]
