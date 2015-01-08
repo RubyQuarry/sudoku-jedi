@@ -55,4 +55,15 @@ describe Grid do
     end
 
   end
+
+
+  context "complet game" do 
+    it "is solved" do
+      expect(grid.complete?).to eql(false)
+    end
+
+    it "is NOT solved" do 
+
+    end
+  end
 end

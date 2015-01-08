@@ -33,6 +33,10 @@ class Grid
     end 
   end
 
+  def complete?
+    !@rows.inject([]) { |sum, a| sum += a.arr }.include? 0
+  end
+
   def cross_hatching(box_num, num)
     remain = @boxes[box_num].difference
     box = @boxes[box_num].arr.each_slice(3).map{ |a| a }
