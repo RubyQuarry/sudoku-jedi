@@ -20,7 +20,7 @@ class Grid
        end
      end
   end
-
+  
   def row_init(txt_file)
      txt_file.each.with_index do |txt, ind|
        @rows[ind].arr += txt.split("").map(&:to_i)
@@ -41,19 +41,26 @@ class Grid
 
   def point_to_contents(point)
     d = point.blank_spaces
-    @boxes[d[0]].arr + @columns[d[2]].arr + @rows[d[1]].arr   
+   # puts point.position
+    #puts @boxes[d[0]].arr.to_s , @columns[d[2]].arr.to_s , @rows[d[1]].arr.to_s    
+    @boxes[d[0]].arr + @columns[d[2]].arr + @rows[d[1]].arr    
   end
 
   def blank
     @rows.each_with_index do |row, index|
       row.arr.each_with_index do |elem, ind|
-        if elem != 0
+        if elem == 0
           point = Point.new(ind, index)
           point.nums = Array(1..9) - point_to_contents(point)
-          @points << point 
+          @points << point
+    #     puts @points.to_s  
         end
       end
     end
+  end
+
+  def x_wing
+
   end
 
   def cross_hatching(box_num)
@@ -97,10 +104,4 @@ class Grid
       num += 1
     end
   end
-
-  def x_wing
-
-  end
-
-
 end

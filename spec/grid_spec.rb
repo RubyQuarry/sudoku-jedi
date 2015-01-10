@@ -61,7 +61,7 @@ describe Grid do
   end
 
 
-  context "complet game" do 
+  context "complete game" do 
     it "is NOT solved" do
       expect(grid.complete?).to eql(false)
     end
@@ -82,9 +82,9 @@ describe Grid do
   end
 
   context "point conversion" do 
-    it "is a point" do
+    it "is a point with correct remaining numbers" do
       grid.blank
-      puts grid.points.to_s
+      expect(grid.points[0].nums).to eql([2,3,8])
     end
   end
 end
