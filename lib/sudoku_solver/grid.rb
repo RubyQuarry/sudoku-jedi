@@ -1,11 +1,13 @@
 require_relative 'box'
+require_relative 'point'
 
 class Grid
-  attr_accessor :rows, :columns, :boxes, :remaining_nums
+  attr_accessor :rows, :columns, :boxes, :remaining_nums, :points
   def initialize(txt_file)
     @rows = Array.new(9) { Row.new([] ) }
     @columns = Array.new(9) { Column.new([]) }
     @boxes = Array.new(9) { Box.new([]) } 
+    @points = []
     box_init(txt_file)
     row_init(txt_file)
     column_init(txt_file)
@@ -37,10 +39,19 @@ class Grid
     !@rows.inject([]) { |sum, a| sum += a.arr }.include? 0
   end
 
+  def point_to_contents(point)
+    d = point.blank_spaces
+    @boxes[d[0]].arr + @columns[d[2]].arr + @rows[d[1]].arr   
+  end
+
   def blank
     @rows.each_with_index do |row, index|
-      row.each_with_index do |elem, ind|
-        Box.new(ind, index) if elem != 0
+      row.arr.each_with_index do |elem, ind|
+        if elem != 0
+          point = Point.new(ind, index)
+          point.nums = Array(1..9) - point_to_contents(point)
+          @points << point 
+        end
       end
     end
   end

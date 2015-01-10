@@ -80,4 +80,11 @@ describe Grid do
                                                                        7 2 4 5 1 8 3 6 9 }.map(&:to_i))
     end
   end
+
+  context "point conversion" do 
+    it "is a point" do
+      grid.blank
+      puts grid.points.to_s
+    end
+  end
 end
