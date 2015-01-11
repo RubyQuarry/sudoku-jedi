@@ -9,6 +9,14 @@ class Point
     @nums = []
   end
 
+
+  def x
+    @position.x
+  end
+
+  def y
+    @position.y
+  end
     
   def blank_spaces
     [(position.y / 3) * 3 + (position.x / 3), position.y, position.x]

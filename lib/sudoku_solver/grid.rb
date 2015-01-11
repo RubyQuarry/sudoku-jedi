@@ -41,7 +41,7 @@ class Grid
 
   def point_to_contents(point)
     d = point.blank_spaces
-   # puts point.position
+    # puts point.position
     #puts @boxes[d[0]].arr.to_s , @columns[d[2]].arr.to_s , @rows[d[1]].arr.to_s    
     @boxes[d[0]].arr + @columns[d[2]].arr + @rows[d[1]].arr    
   end
@@ -60,7 +60,10 @@ class Grid
   end
 
   def x_wing
-
+    @points.each do |point|
+      compare = point.nums
+      @points.select{ |p| p if (p.x == point.x || p.y == point.y) && (compare + p.nums).count >= 1}    
+    end
   end
 
   def cross_hatching(box_num)
