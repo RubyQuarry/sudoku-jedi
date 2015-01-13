@@ -8,6 +8,23 @@ class Grid
     @columns = Array.new(9) { Column.new([]) }
     @boxes = Array.new(9) { Box.new([]) } 
     @points = []
+    txt_file.each_with_index do |text, row|
+      text.split("").map(&:to_i).each_with_index do |num, col|
+        @points << Point.new(row, col, num)
+      end
+    end
+    
+    @points.select {|p| p.value == 0 }.each do |point|
+#point.nums += (Array(1..9)-(find_diff(get_box(point.box))+find_diff(get_row(point.y))+find_diff(get_column(point.x)))) 
+    end
+    find_diff(@points[0])
+    puts @points[0].inspect
+    @points.select { |po| po.value == 0 }.each do |poi|
+      find_diff(poi)
+    end
+    point_solve
+
+
     box_init(txt_file)
     row_init(txt_file)
     column_init(txt_file)
@@ -59,10 +76,63 @@ class Grid
     end
   end
 
+
+  def get_box(num)
+    @points.select { |point| point.box == num }.map { |b| b.value }
+  end
+
+  def get_row(num)
+    @points.select { |point| point.y == num }.map { |b| b.value }
+  end
+
+  def get_column(num)
+    @points.select { |point| point.x == num }.map { |b| b.value }
+  end
+
+  def find_diff(point)
+    point.nums = Array(1..9) - (get_box(point.box) + get_row(point.y) + get_column(point.x))
+  end
+
+  def flat_points
+    @points.select { |p| p.value == 0 }
+  end
+
+  def get_values(arr)
+    arr.map { |b| b.value }
+  end
+
+
+  def iter_boxes(num)
+    box_diff(get_box(num))
+  end
+
+  def point_solve
+    num = 0
+    while @points.select { |p| p.value != 0 }.count > 0
+      box = @points.select { |point| point.box == num }
+      Array(1..9).each do |n|
+        next if 
+        crossed = box.select { |po| po.nums.include? n }
+        if crossed.count == 1
+          crossed.first.value = n
+        end
+      end
+      num = (num + 1) % 9
+    end
+  end
+
+  
+
+
   def hidden_pairs
     @points.each do |point|
 
+
     end
+  end
+
+  def naked_subset
+
   end
 
   def x_wing
