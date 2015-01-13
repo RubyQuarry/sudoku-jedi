@@ -84,7 +84,7 @@ describe Grid do
   context "point conversion" do 
     it "is a point with correct remaining numbers" do
       grid.blank
-      expect(grid.points[0].nums).to eql([2,3,8])
+      expect(grid.points[0].nums).to eql([8])
     end
   end
 end

@@ -17,8 +17,8 @@ class Grid
     @points.select {|p| p.value == 0 }.each do |point|
 #point.nums += (Array(1..9)-(find_diff(get_box(point.box))+find_diff(get_row(point.y))+find_diff(get_column(point.x)))) 
     end
-    find_diff(@points[0])
-    puts @points[0].inspect
+    #find_diff(@points[0])
+    #puts @points[0].inspect
     @points.select { |po| po.value == 0 }.each do |poi|
       find_diff(poi)
     end
@@ -89,6 +89,10 @@ class Grid
     @points.select { |point| point.x == num }.map { |b| b.value }
   end
 
+  def fill_row(num)
+    @points.select { |point| point.x == num  }
+  end
+
   def find_diff(point)
     point.nums = Array(1..9) - (get_box(point.box) + get_row(point.y) + get_column(point.x))
   end
@@ -100,27 +104,78 @@ class Grid
   def get_values(arr)
     arr.map { |b| b.value }
   end
+  
+  def update_points 
+    @points.select { |po| po.value == 0 }.each do |poi|
+      find_diff(poi)
+    end
+    (0..8).each do |num|
+      cols = @points.select { |p| p.x == num }
+      yield cols 
+      
+      cols = @points.select { |p| p.box == num }
+      yield cols 
 
-
-  def iter_boxes(num)
-    box_diff(get_box(num))
+      cols = @points.select { |p| p.y == num }
+      yield cols
+    end
   end
+
 
   def point_solve
     num = 0
-    while @points.select { |p| p.value != 0 }.count > 0
+    while @points.select { |p| p.value == 0 }.count > 0
       box = @points.select { |point| point.box == num }
-      Array(1..9).each do |n|
-        next if 
+      finders = Array(1..9) - box.map{ |b| b.value }
+      finders.each do |n|
         crossed = box.select { |po| po.nums.include? n }
         if crossed.count == 1
           crossed.first.value = n
+          update_points do |cols| 
+            if cols.map { |c| c.value }.count(0) == 1
+              cols.select { |s| s.value == 0 }.first.value = (Array(1..9) - (cols.map { |f| f.value })).first
+            end
+          end 
+        end
+      end
+      box = @points.select { |point| point.x == num }
+      finders = Array(1..9) - box.map{ |b| b.value }
+      finders.each do |n|
+        crossed = box.select { |po| po.nums.include? n }
+        if crossed.count == 1
+          crossed.first.value = n
+          update_points do |cols| 
+            if cols.map { |c| c.value }.count(0) == 1
+              cols.select { |s| s.value == 0 }.first.value = (Array(1..9) - (cols.map { |f| f.value })).first
+            end
+          end 
+        end
+      end
+      box = @points.select { |point| point.y == num }
+      finders = Array(1..9) - box.map{ |b| b.value }
+      finders.each do |n|
+        crossed = box.select { |po| po.nums.include? n }
+        if crossed.count == 1
+          crossed.first.value = n
+          update_points do |cols| 
+            if cols.map { |c| c.value }.count(0) == 1
+              cols.select { |s| s.value == 0 }.first.value = (Array(1..9) - (cols.map { |f| f.value })).first
+            end
+          end 
         end
       end
       num = (num + 1) % 9
     end
   end
 
+
+  def print_values
+    puts "GRID:"
+    @points.each_slice(9) do |slice|
+      puts slice.map { |p| p.value}.to_s
+    end
+    puts "------------------"
+  end
   
 
 
