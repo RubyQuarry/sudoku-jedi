@@ -110,60 +110,30 @@ class Grid
       find_diff(poi)
     end
     (0..8).each do |num|
-      cols = @points.select { |p| p.x == num }
-      yield cols 
-      
-      cols = @points.select { |p| p.box == num }
-      yield cols 
-
-      cols = @points.select { |p| p.y == num }
-      yield cols
+      [:box, :x, :y].each do |fields|
+        yield @points.select { |p| p.send(fields) == num }
+      end
     end
-  end
-
+  end 
 
   def point_solve
     num = 0
     while @points.select { |p| p.value == 0 }.count > 0
-      box = @points.select { |point| point.box == num }
-      finders = Array(1..9) - box.map{ |b| b.value }
-      finders.each do |n|
-        crossed = box.select { |po| po.nums.include? n }
-        if crossed.count == 1
-          crossed.first.value = n
-          update_points do |cols| 
-            if cols.map { |c| c.value }.count(0) == 1
-              cols.select { |s| s.value == 0 }.first.value = (Array(1..9) - (cols.map { |f| f.value })).first
-            end
-          end 
+      [:box, :x, :y].each do |selection|
+        box = @points.select { |point| point.send(selection) == num }
+        finders = Array(1..9) - box.map{ |b| b.value }
+        finders.each do |n|
+          crossed = box.select { |po| po.nums.include? n }
+          if crossed.count == 1
+            crossed.first.value = n
+            update_points do |cols| 
+              if cols.map { |c| c.value }.count(0) == 1
+                cols.select { |s| s.value == 0 }.first.value = (Array(1..9) - (cols.map { |f| f.value })).first
+              end
+            end 
+          end
         end
-      end
-      box = @points.select { |point| point.x == num }
-      finders = Array(1..9) - box.map{ |b| b.value }
-      finders.each do |n|
-        crossed = box.select { |po| po.nums.include? n }
-        if crossed.count == 1
-          crossed.first.value = n
-          update_points do |cols| 
-            if cols.map { |c| c.value }.count(0) == 1
-              cols.select { |s| s.value == 0 }.first.value = (Array(1..9) - (cols.map { |f| f.value })).first
-            end
-          end 
-        end
-      end
-      box = @points.select { |point| point.y == num }
-      finders = Array(1..9) - box.map{ |b| b.value }
-      finders.each do |n|
-        crossed = box.select { |po| po.nums.include? n }
-        if crossed.count == 1
-          crossed.first.value = n
-          update_points do |cols| 
-            if cols.map { |c| c.value }.count(0) == 1
-              cols.select { |s| s.value == 0 }.first.value = (Array(1..9) - (cols.map { |f| f.value })).first
-            end
-          end 
-        end
-      end
+      end 
       num = (num + 1) % 9
     end
   end
