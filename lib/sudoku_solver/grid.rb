@@ -59,6 +59,12 @@ class Grid
     end
   end
 
+  def hidden_pairs
+    @points.each do |point|
+
+    end
+  end
+
   def x_wing
     @points.each do |point|
       compare = point.nums
