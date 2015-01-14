@@ -22,7 +22,7 @@ class Grid
     @points.select { |po| po.value == 0 }.each do |poi|
       find_diff(poi)
     end
-    point_solve
+#    point_solve
 
 
     box_init(txt_file)
@@ -104,11 +104,21 @@ class Grid
   def get_values(arr)
     arr.map { |b| b.value }
   end
+
+  # fill in value if only possibility left
+  def easy_fill_in
+    @points.each do |p|
+      if p.nums.count == 1
+        p.value = p.nums.first
+      end
+    end
+  end
   
   def update_points 
     @points.select { |po| po.value == 0 }.each do |poi|
       find_diff(poi)
     end
+    easy_fill_in
     (0..8).each do |num|
       [:box, :x, :y].each do |fields|
         yield @points.select { |p| p.send(fields) == num }
@@ -146,13 +156,26 @@ class Grid
     end
     puts "------------------"
   end
-  
 
-
-  def hidden_pairs
+  def naked_pairs
+    puts @points.inspect
     @points.each do |point|
-
-
+      current_nums = point.nums
+      [:x, :y, :box].each do |cond|
+        poss = @points.select { |p| p.nums == current_nums && point.send(cond) == p.send(cond) } 
+        if poss.count == 2 && current_nums.count == 2
+          poss[0].share(poss[1]).each do |motion|
+            puts motion
+            found = @points.select { |po| po.send(motion) == point.send(motion) && po.value == 0 && po.nums != current_nums }
+            found.each do |f|
+              f.nums = (f.nums - current_nums)
+              if f.nums.count == 1
+                f.value = f.nums.first
+              end
+            end
+          end
+        end
+      end 
     end
   end
 

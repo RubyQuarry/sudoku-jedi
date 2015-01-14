@@ -11,6 +11,19 @@ class Point
     @box = (position.y / 3) * 3 + (position.x / 3) 
   end
 
+  def nums
+    @nums.sort
+  end
+
+
+  def share(point)
+    a = []
+    a << :box if @box == point.box
+    a << :x if x == point.x
+    a << :y if y == point.y
+    return a
+  end
+
 
   def x
     @position.x

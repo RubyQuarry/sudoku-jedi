@@ -84,7 +84,21 @@ describe Grid do
   context "point conversion" do 
     it "is a point with correct remaining numbers" do
       grid.blank
-      expect(grid.points[0].nums).to eql([8])
+      expect(grid.points[0].nums).to eql([2,3,8])
+    end
+    it "solves with points" do
+      @new_grid = Grid.new(%w{400270600
+                              798156234
+                              020840007
+                              237468951
+                              849531726
+                              561792843
+                              082015479
+                              070024300
+                              004087002})
+      @new_grid.naked_pairs
+      @new_grid.update_points { |p| p }
+      expect(@new_grid.points[9 * 9 - 2].value).to eq(6)
     end
   end
 end
