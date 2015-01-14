@@ -24,6 +24,13 @@ class Point
     return a
   end
 
+  def value=(val)
+    if val != 0 
+      @value = val
+      @nums = []
+    end
+  end
+
 
   def x
     @position.x

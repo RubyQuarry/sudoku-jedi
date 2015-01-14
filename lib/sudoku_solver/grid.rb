@@ -189,6 +189,33 @@ poss = @points.select{ |p| p.nums.to_set.subset?(current_nums.to_set) && p.nums.
       end 
     end
   end
+  
+  def box_count(box, num)
+    @points.select { |p| p.box == box && p.nums.to_set.subset?(num.to_set) }.count 
+  end
+
+  def intersection_removal
+    #1
+    @points.select { |po| po.value == 0 }.each do |point|
+      [:x, :y].each do |symbol|
+        one = @points.select { |p| p.value == 0 && point.send(symbol) == p.send(symbol) && point.box == p.box && (p.nums & point.nums).count > 0 }
+        if one.count > 1
+          one_remove = one.inject(point.nums) { |sum, a| sum = (sum & a.nums) }
+  @points.select { |poi| poi.value == 0 && poi.send(symbol) == point.send(symbol) && point.box != poi.box }.each do |numbers|
+             one_remove.each do |remove|
+               if @points.select { |p| point.box == p.box && p.nums.include?(remove) }.count == one.count
+                 puts "tried to remove from #{remove}  to #{numbers.inspect}"
+                 numbers.nums = (numbers.nums - [remove])
+                 if numbers.nums.count == 1
+                   numbers.val = numbers.nums.first
+                 end
+               end
+            end  
+          end 
+        end
+      end 
+    end
+  end
 
   def x_wing
     @points.each do |point|

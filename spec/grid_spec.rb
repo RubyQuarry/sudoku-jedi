@@ -113,9 +113,11 @@ describe Grid do
                               000093612
                               200000403
                               130642070})
-      @sec_grid.naked_pairs 
-      @sec_grid.update_points { |p| p}
-      expect(@sec_grid.points[9 * 4 + 6].nums).to eql([1,3])
+      @sec_grid.intersection_removal
+      @sec_grid.naked_pairs
+      expect(@sec_grid.points[9 * 4 + 6].value).to eql(3)
+      expect(@sec_grid.points[9*9 - 1 - 2].nums).to eql([5,8,9])
+     # @sec_grid.point_solution
     end
   end
 end
