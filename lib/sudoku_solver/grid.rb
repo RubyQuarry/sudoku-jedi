@@ -1,5 +1,6 @@
 require_relative 'box'
 require_relative 'point'
+require 'set'
 
 class Grid
   attr_accessor :rows, :columns, :boxes, :remaining_nums, :points
@@ -14,15 +15,11 @@ class Grid
       end
     end
     
-    @points.select {|p| p.value == 0 }.each do |point|
-#point.nums += (Array(1..9)-(find_diff(get_box(point.box))+find_diff(get_row(point.y))+find_diff(get_column(point.x)))) 
-    end
     #find_diff(@points[0])
     #puts @points[0].inspect
     @points.select { |po| po.value == 0 }.each do |poi|
-      find_diff(poi)
+      poi.nums = Array(1..9) - (get_box(poi.box) + get_row(poi.y) + get_column(poi.x))
     end
-#    point_solve
 
 
     box_init(txt_file)
@@ -94,8 +91,8 @@ class Grid
   end
 
   def find_diff(point)
-    point.nums = Array(1..9) - (get_box(point.box) + get_row(point.y) + get_column(point.x))
-  end
+    point.nums = point.nums - (get_box(point.box) + get_row(point.y) + get_column(point.x))
+  end 
 
   def flat_points
     @points.select { |p| p.value == 0 }
@@ -128,7 +125,7 @@ class Grid
 
   def point_solve
     num = 0
-    while @points.select { |p| p.value == 0 }.count > 0
+    100.times do |t|
       [:box, :x, :y].each do |selection|
         box = @points.select { |point| point.send(selection) == num }
         finders = Array(1..9) - box.map{ |b| b.value }
@@ -148,6 +145,13 @@ class Grid
     end
   end
 
+  def point_solution
+    while @points.map { |p| p.value }.include? 0
+      point_solve
+      naked_pairs
+    end
+  end
+
 
   def print_values
     puts "GRID:"
@@ -157,16 +161,23 @@ class Grid
     puts "------------------"
   end
 
+
+  def compare_points(arr)
+    a = []
+    a << :x if arr.all? { |w| w.x == arr.first.x }
+    a << :y if arr.all? { |s| s.y == arr.first.y }
+    a << :box if arr.all? { |t| t.box == arr.first.box }
+    a
+  end
+
   def naked_pairs
-    puts @points.inspect
-    @points.each do |point|
+    @points.select {|poi| poi.value == 0 }.each do |point|
       current_nums = point.nums
       [:x, :y, :box].each do |cond|
-        poss = @points.select { |p| p.nums == current_nums && point.send(cond) == p.send(cond) } 
-        if poss.count == 2 && current_nums.count == 2
-          poss[0].share(poss[1]).each do |motion|
-            puts motion
-            found = @points.select { |po| po.send(motion) == point.send(motion) && po.value == 0 && po.nums != current_nums }
+poss = @points.select{ |p| p.nums.to_set.subset?(current_nums.to_set) && p.nums.count >= 2 && point.send(cond) == p.send(cond) } 
+        if poss.count == current_nums.count && current_nums.count >= 2
+          compare_points(poss).each do |motion|
+            found = @points.select { |po| po.send(motion) == point.send(motion) && po.value == 0 && poss.none? { |n| n == po }}
             found.each do |f|
               f.nums = (f.nums - current_nums)
               if f.nums.count == 1
@@ -177,10 +188,6 @@ class Grid
         end
       end 
     end
-  end
-
-  def naked_subset
-
   end
 
   def x_wing

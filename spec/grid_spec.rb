@@ -83,9 +83,10 @@ describe Grid do
 
   context "point conversion" do 
     it "is a point with correct remaining numbers" do
-      grid.blank
-      expect(grid.points[0].nums).to eql([2,3,8])
+      grid.point_solution
+      expect(grid.points.map { |p| p.value}.include? 0).to eql(false)
     end
+    
     it "solves with points" do
       @new_grid = Grid.new(%w{400270600
                               798156234
@@ -96,9 +97,25 @@ describe Grid do
                               082015479
                               070024300
                               004087002})
-      @new_grid.naked_pairs
-      @new_grid.update_points { |p| p }
-      expect(@new_grid.points[9 * 9 - 2].value).to eq(6)
+       @new_grid.naked_pairs
+       @new_grid.update_points { |p| p }
+       expect(@new_grid.points[9 * 9 - 2].value).to eq(6)
+    #  puts @new_grid.points[9*9 - 3].nums
+    #  @new_grid.print_values
+    end
+    it "solves a triplet" do
+      @sec_grid = Grid.new(%w{070408029
+                              002000004
+                              854020007
+                              008374200
+                              020000000
+                              003261700
+                              000093612
+                              200000403
+                              130642070})
+      @sec_grid.naked_pairs 
+      @sec_grid.update_points { |p| p}
+      expect(@sec_grid.points[9 * 4 + 6].nums).to eql([1,3])
     end
   end
 end
