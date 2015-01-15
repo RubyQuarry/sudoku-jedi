@@ -3,7 +3,8 @@
 [![Coverage Status](https://coveralls.io/repos/RubyQuarry/sudoku_solver/badge.png)](https://coveralls.io/r/RubyQuarry/sudoku_solver)
 [![Gem Version](https://badge.fury.io/rb/sudoku-jedi.svg)](http://badge.fury.io/rb/sudoku-jedi)
 
-Solves basic sudoku puzzles in a flash!
+Currently solves easy to moderate sudoku puzzles in a flash!
+
 ## Installation
 
 Add this line to your application's Gemfile:

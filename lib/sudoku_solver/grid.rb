@@ -206,7 +206,6 @@ poss = @points.select{ |p| p.nums.to_set.subset?(current_nums.to_set) && p.nums.
         if one.count > 1
   @points.select { |poi| poi.value == 0 && poi.send(symbol) == point.send(symbol) && point.box != poi.box }.each do |numbers|
              one_remove.each do |remove|
-                # puts "tried to remove from #{remove}  to #{numbers.inspect}"
                if @points.select { |p| point.box == p.box && p.nums.include?(remove) }.count == one.count
                  numbers.nums = (numbers.nums - [remove])
                end
