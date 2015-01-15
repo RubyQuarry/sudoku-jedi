@@ -133,5 +133,18 @@ describe Grid do
        @hard_grid.point_solution
        expect(@hard_grid.print_values).to eql("351286497492157638786934512275469183938521764614873259829645371163792845547318926")
     end
+
+    it "solves x-wing puzzle" do 
+      @x_grid = Grid.new(%w{043080250
+                            600000000
+                            000001094
+                            900004070
+                            000608000
+                            010200003
+                            820500000
+                            000000005
+                            034090710})
+      # @x_grid.point_solution
+      # expect(@x_grid.print_values).to eql("143986257679425381285731694962354178357618942418279563821567439796143825534892716")
   end
 end
