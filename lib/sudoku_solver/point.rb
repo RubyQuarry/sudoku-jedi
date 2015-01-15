@@ -35,6 +35,7 @@ class Point
     @nums = n
     if @nums.count == 1
       @value = @nums.first
+      @nums = []
     end
   end
 

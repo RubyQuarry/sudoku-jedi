@@ -148,8 +148,11 @@ class Grid
   def point_solution
     while @points.map { |p| p.value }.include? 0
       point_solve
-      intersection_removal
+      x_wing
       naked_pairs
+      intersection_removal
+    #  print_values_formatted
+    #  puts @points.select { |p| p.y == 7 }.to_s
     end
   end
 
@@ -183,7 +186,7 @@ class Grid
 poss = @points.select{ |p| p.nums.to_set.subset?(current_nums.to_set) && p.nums.count >= 2 && point.send(cond) == p.send(cond) } 
         if poss.count == current_nums.count && current_nums.count >= 2
           compare_points(poss).each do |motion|
-            found = @points.select { |po| po.send(motion) == point.send(motion) && po.value == 0 && poss.none? { |n| n == po } && point != po}
+            found = @points.select { |po| po.send(motion) == point.send(motion) && po.value == 0 && poss.none? { |n| n == po } && point != po } 
             found.each do |f|
               f.nums = (f.nums - current_nums)
             end
@@ -224,9 +227,42 @@ poss = @points.select{ |p| p.nums.to_set.subset?(current_nums.to_set) && p.nums.
   end
 
   def x_wing
-    @points.each do |point|
-      compare = point.nums
-      @points.select{ |p| p if (p.x == point.x || p.y == point.y) && (compare + p.nums).count >= 1}    
+    (0..8).each do |row|
+      (1..9).each do |num|
+        first = @points.select { |p| p.y == row && p.nums.include?(num) }
+        if first.count == 2
+          match = @points.select { |p| p.y != row && p.nums.include?(num) && first.map { |a| a.x }.include?(p.x) }
+          if match.count == 2
+            all = first + match
+           #puts all.to_s
+            all.each do |c|
+              choice = @points.select { |s| s.x == c.x && (!all.include?(s)) }
+              choice.each do |ch|
+           #    puts "DONE"
+                ch.nums = (ch.nums - [num]) 
+              end 
+            end
+          end
+        end
+      end
+    end
+    (0..8).each do |row|
+      (1..9).each do |num|
+        first = @points.select { |p| p.x == row && p.nums.include?(num) }
+        if first.count == 2
+          match = @points.select { |p| p.x != row && p.nums.include?(num) && first.map { |a| a.y }.include?(p.y) }
+          if match.count == 2
+            all = first + match
+            all.each do |c|
+              choice = @points.select { |s| s.y == c.y && (!all.include?(s)) }
+              choice.each do |ch|
+           #    puts "DONE Y"
+                ch.nums = (ch.nums - [num]) 
+              end 
+            end
+          end
+        end
+      end
     end
   end
 
