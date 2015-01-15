@@ -146,5 +146,6 @@ describe Grid do
                             034090710})
       # @x_grid.point_solution
       # expect(@x_grid.print_values).to eql("143986257679425381285731694962354178357618942418279563821567439796143825534892716")
+    end
   end
 end
