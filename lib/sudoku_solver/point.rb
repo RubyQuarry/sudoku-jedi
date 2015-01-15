@@ -31,6 +31,13 @@ class Point
     end
   end
 
+  def nums=(n)
+    @nums = n
+    if @nums.count == 1
+      @value = @nums.first
+    end
+  end
+
 
   def x
     @position.x

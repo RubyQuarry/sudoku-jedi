@@ -101,7 +101,7 @@ describe Grid do
        @new_grid.update_points { |p| p }
        expect(@new_grid.points[9 * 9 - 2].value).to eq(6)
     #  puts @new_grid.points[9*9 - 3].nums
-    #  @new_grid.print_values
+      # @new_grid.point_solution
     end
     it "solves a triplet" do
       @sec_grid = Grid.new(%w{070408029
@@ -113,11 +113,27 @@ describe Grid do
                               000093612
                               200000403
                               130642070})
+      puts @sec_grid.points[9 * 4 + 6].nums
       @sec_grid.intersection_removal
       @sec_grid.naked_pairs
       expect(@sec_grid.points[9 * 4 + 6].value).to eql(3)
       expect(@sec_grid.points[9*9 - 1 - 2].nums).to eql([5,8,9])
-     # @sec_grid.point_solution
+      @sec_grid.point_solution
+      expect(@sec_grid.print_values).to eql("671438529392715864854926137518374296726859341943261785487593612269187453135642978")
+    end
+
+    it "solves a hard puzzle" do 
+       @hard_grid = Grid.new(%w{300200000
+                                000107000
+                                706030500
+                                070009080
+                                900020004
+                                010800050
+                                009040301
+                                000702000
+                                000008006})
+       @hard_grid.point_solution
+       expect(@hard_grid.print_values).to eql("351286497492157638786934512275469183938521764614873259829645371163792845547318926")
     end
   end
 end

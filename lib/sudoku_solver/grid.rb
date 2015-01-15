@@ -148,17 +148,23 @@ class Grid
   def point_solution
     while @points.map { |p| p.value }.include? 0
       point_solve
+      intersection_removal
       naked_pairs
+    end
+  end
+
+  def print_values_formatted
+    puts "GRID"
+    @points.each_slice(9) do |s|
+      puts s.map{ |p| p.value}.join
     end
   end
 
 
   def print_values
-    puts "GRID:"
-    @points.each_slice(9) do |slice|
-      puts slice.map { |p| p.value}.to_s
-    end
-    puts "------------------"
+    a = @points.map { |p| p.value}.join
+    puts a 
+    a
   end
 
 
@@ -177,12 +183,9 @@ class Grid
 poss = @points.select{ |p| p.nums.to_set.subset?(current_nums.to_set) && p.nums.count >= 2 && point.send(cond) == p.send(cond) } 
         if poss.count == current_nums.count && current_nums.count >= 2
           compare_points(poss).each do |motion|
-            found = @points.select { |po| po.send(motion) == point.send(motion) && po.value == 0 && poss.none? { |n| n == po }}
+            found = @points.select { |po| po.send(motion) == point.send(motion) && po.value == 0 && poss.none? { |n| n == po } && point != po}
             found.each do |f|
               f.nums = (f.nums - current_nums)
-              if f.nums.count == 1
-                f.value = f.nums.first
-              end
             end
           end
         end
@@ -199,20 +202,24 @@ poss = @points.select{ |p| p.nums.to_set.subset?(current_nums.to_set) && p.nums.
     @points.select { |po| po.value == 0 }.each do |point|
       [:x, :y].each do |symbol|
         one = @points.select { |p| p.value == 0 && point.send(symbol) == p.send(symbol) && point.box == p.box && (p.nums & point.nums).count > 0 }
+        one_remove = one.inject(point.nums) { |sum, a| sum = (sum & a.nums) }
         if one.count > 1
-          one_remove = one.inject(point.nums) { |sum, a| sum = (sum & a.nums) }
   @points.select { |poi| poi.value == 0 && poi.send(symbol) == point.send(symbol) && point.box != poi.box }.each do |numbers|
              one_remove.each do |remove|
+                # puts "tried to remove from #{remove}  to #{numbers.inspect}"
                if @points.select { |p| point.box == p.box && p.nums.include?(remove) }.count == one.count
-                 puts "tried to remove from #{remove}  to #{numbers.inspect}"
                  numbers.nums = (numbers.nums - [remove])
-                 if numbers.nums.count == 1
-                   numbers.val = numbers.nums.first
-                 end
                end
             end  
           end 
-        end
+        end 
+        @points.select { |p| p.value == 0 && point.box == p.box && (!one.include?(p)) && one.count > 1 }.each do |a|
+             one_remove.each do |remove|
+               if @points.select { |p| p.value == 0 && p.box != point.box && p.send(symbol) == point.send(symbol) && (p.nums.include?(remove)) }.count == 0
+                  a.nums = (a.nums - [remove])
+               end
+             end
+           end
       end 
     end
   end
