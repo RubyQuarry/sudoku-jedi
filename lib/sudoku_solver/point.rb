@@ -1,4 +1,5 @@
 require_relative 'container'
+require 'set'
 
 class Point
   attr_accessor :box, :position, :nums, :value 
@@ -25,18 +26,30 @@ class Point
   end
 
   def value=(val)
-    if val != 0 
+    if @value == 0
       @value = val
-      @nums = []
+      if @value != 0 
+        @nums = [val]
+      end
     end
   end
 
   def nums=(n)
-    @nums = n
-    if @nums.count == 1
-      @value = @nums.first
-      @nums = []
+    if value == 0
+      @nums = n
+      if @nums.count == 1
+        value = @nums.first
+      end
     end
+  end
+
+
+  def include?(num)
+    nums.include?(num) || (num == value)
+  end
+
+  def subset?(point)
+    nums.to_set.subset?(point.nums.to_set)
   end
 
 
@@ -54,3 +67,4 @@ class Point
 
 
 end
+
