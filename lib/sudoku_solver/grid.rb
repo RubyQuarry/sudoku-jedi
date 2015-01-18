@@ -18,7 +18,7 @@ class Grid
   end
 
   def print_values_formatted
-    puts "GRID"
+    puts "SOLUTION"
     @points.each_slice(9) do |s|
       puts s.map{ |p| p.value}.join
     end
