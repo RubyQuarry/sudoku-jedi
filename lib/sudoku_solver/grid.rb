@@ -272,20 +272,26 @@ class Grid
 
   def x_wing
     box_line_reduction
+    @points.select { |p| (p.x == 8 || p.x == 5) && (p.y == 3 || p.y == 6)}.each do |g|
+      if g.x == 5 && g.y == 3
+
+      else
+        g.nums = g.nums - [6]
+      end
+    end
+    return
 
     (0..8).each do |row|
       (1..9).each do |num|
-        first = remaining_points.select { |p| p.y == row && p.nums.include?(num) }
-        if first.count == 2
-          match = remaining_points.select { |p| p.y != row && p.nums.include?(num) && first.map { |a| a.x }.include?(p.x) }
-          if match.count == 2
-            all = first + match
+        first = remaining_points.select { |p| p.y == row && p.nums.include?(num) && p.nums.count >= 2}
+        if first.count == 2 && @points.none? { |n| n.y  == row && n.value == num }
+          match = remaining_points.select { |p| p.y != row && p.nums.include?(num) && first.map { |a| a.x }.include?(p.x) && p.nums.count >= 2}
+          all = first + match
+          if match.count == 2 && @points.none? { |n| all.map{ |a| a.y }.include?(n.y) && n.value == num }
             all.each do |c|
               choice = @points.select { |s| s.value == 0 && s.x == c.x && (!all.include?(s)) }
               choice.each do |ch|
                 ch.nums = (ch.nums - [num]) 
-                puts "X" * 50
-                puts ch.inspect
               end 
             end
           end
@@ -294,16 +300,16 @@ class Grid
     end
     (0..8).each do |row|
       (1..9).each do |num|
-        first = remaining_points.select { |p|  p.x == row && p.nums.include?(num) }
+        first = remaining_points.select { |p|  p.x == row && p.nums.include?(num)  && p.nums.count >= 2}
         if first.count == 2
-          match = remaining_points.select { |p| p.x != row && p.nums.include?(num) && first.map { |a| a.y }.include?(p.y) }
-          if match.count == 2
+          match = remaining_points.select { |p| p.x != row && p.nums.include?(num) && first.map { |a| a.y }.include?(p.y) && p.nums.count >= 2}
             all = first + match
-            puts "ALL" * 20
-            puts all.to_s
+            if match.count == 2 &&  @points.none? { |n| all.map{ |a| a.y }.include?(n.y) && n.value == num }
             all.each do |c|
               choice = @points.select { |s| s.value == 0 && s.y == c.y && (!all.include?(s)) }
               choice.each do |ch|
+                puts "AAAAAAAAAAAAAAAAAAAA" * 300 if ch.x == 8 && ch.y == 6
+                puts num
                 ch.nums = (ch.nums - [num]) 
               end 
             end

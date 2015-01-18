@@ -38,7 +38,7 @@ class Point
     if value == 0
       @nums = n
       if @nums.count == 1
-        value = @nums.first
+        @value = @nums.first
       end
     end
   end
