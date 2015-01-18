@@ -1,0 +1,2 @@
+require 'sudoku_solver/cli'
+CLI.start
