@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["ajn123"]
   spec.email         = ["ajn123@vt.edu"]
   spec.summary       = %q{Solves a sudoku puzzle}
-  spec.description   = %q{Solves basic puzzles for now}
-  spec.homepage      = ""
+  spec.description   = %q{Solves easy to moderate soduku puzzles efficiently}
+  spec.homepage      = "https://github.com/RubyQuarry/sudoku-jedi"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
