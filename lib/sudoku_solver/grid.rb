@@ -98,19 +98,11 @@ class Grid
 
   def solve
     while !is_solved?
-      puts @points.select { |p| p.x == 6  && (p.y == 6 || p.y == 4 ) }.to_s
-      puts @points.select { |p| p.x == 8 && p.y == 6 }.to_s
-      print_values_formatted
       all_naked_pairs
       hidden_pairs
-      puts "pointing"
       pointing_pairs
-      puts "box"
       box_line_reduction
-      puts "x"
       x_wing
-      puts "DONE"
-    # print_values_formatted
     end
   end
 
@@ -180,39 +172,11 @@ class Grid
     @points.select{ |p| p.value == 0 }.count == 0
   end
 
-  def point_solution
-    while @points.map { |p| p.value }.include? 0
-      print_values_formatted
-      a = fill_in
-      next if a == 1
-      a = point_solve
-      next if a == 1
-      a = naked_pairs
-      next if a == 1
-      puts "POINT"
-      a = pointing_pairs_box_line_reduction
-      next if a == 1
-      puts "XWING"
-      x_wing
-     # @points.select { |p| p.value == 0 }.each { |p| find_diff(p)}
-    # puts @points.select{ |p| p.y == 7 && p.x == 4}.to_s
-    #  print_values_formatted
-    #  puts @points.select { |p| p.y == 7 }.to_s
-    end
-  end
-
   def print_values_formatted
     puts "GRID"
     @points.each_slice(9) do |s|
       puts s.map{ |p| p.value}.join
     end
-  end
-
-
-  def print_values
-    a = @points.map { |p| p.value}.join
-    puts a 
-    a
   end
 
 
@@ -227,8 +191,8 @@ class Grid
 
   def hidden_pairs
     all_naked_pairs
-    @points.select { |p| p.x == 6  &&  p.y == 4  }.first.nums =  @points.select { |p| p.x == 6  &&  p.y == 4  }.first.nums - [1,5]
-    @points.select { |p| p.x == 6  &&  p.y == 6  }.first.nums =  @points.select { |p| p.x == 6  &&  p.y == 6  }.first.nums - [3,6]
+#   @points.select { |p| p.x == 6  &&  p.y == 4  }.first.nums =  @points.select { |p| p.x == 6  &&  p.y == 4  }.first.nums - [1,5]
+#   @points.select { |p| p.x == 6  &&  p.y == 6  }.first.nums =  @points.select { |p| p.x == 6  &&  p.y == 6  }.first.nums - [3,6]
     
     remaining_points.each do |point|
       next if point.nums.count <= 1
@@ -244,141 +208,43 @@ class Grid
     end
   end
 
-=begin
-  def naked_pairs
-    @points.select {|poi| poi.value == 0 }.each do |point|
-      current_nums = point.nums
-      [:x, :y, :box].each do |cond|
-       poss = @points.select{ |p| p.nums.to_set.subset?(current_nums.to_set) && p.nums.count >= 2 && point.send(cond) == p.send(cond) } 
-       if poss.count == current_nums.count && current_nums.count >= 2 && current_nums.count <= 4
-          compare_points(poss).each do |motion|
-            found = @points.select { |po| po.send(motion) == point.send(motion) && po.value == 0 && poss.none? { |n| n == po } && point != po } 
-            found.each do |f|
-              f.nums = (f.nums - current_nums)
-              fill_in
-              return 1
-            end
-          end
-        end
-      end 
-    end
-    return 0
-  end
-=end
-
   def box_count(box, num)
     @points.select { |p| p.box == box && p.nums.to_set.subset?(num.to_set) }.count 
   end
 
   def x_wing
     box_line_reduction
-    @points.select { |p| (p.x == 8 || p.x == 5) && (p.y == 3 || p.y == 6)}.each do |g|
-      if g.x == 5 && g.y == 3
-
-      else
-        g.nums = g.nums - [6]
-      end
-    end
-    return
-
-    (0..8).each do |row|
-      (1..9).each do |num|
-        first = remaining_points.select { |p| p.y == row && p.nums.include?(num) && p.nums.count >= 2}
-        if first.count == 2 && @points.none? { |n| n.y  == row && n.value == num }
-          match = remaining_points.select { |p| p.y != row && p.nums.include?(num) && first.map { |a| a.x }.include?(p.x) && p.nums.count >= 2}
-          all = first + match
-          if match.count == 2 && @points.none? { |n| all.map{ |a| a.y }.include?(n.y) && n.value == num }
-            all.each do |c|
-              choice = @points.select { |s| s.value == 0 && s.x == c.x && (!all.include?(s)) }
-              choice.each do |ch|
-                ch.nums = (ch.nums - [num]) 
-              end 
+    remaining_points.each do |point|
+      point.nums.each do |num|
+        [:x, :y].each do |symbol|
+          arr = @points.select{ |p| p.nums.include?(num) && p.send(flip(symbol)) == point.send(flip(symbol)) && p.value == 0  }
+          if arr.count == 2 && @points.select { |p| p.value == num && p.send(flip(symbol)) == point.send(flip(symbol)) }.count == 0
+            last = @points.select { |p| p.nums.include?(num) && arr.map{ |a| a.send(symbol) }.include?(p.send(symbol)) && (!arr.include?(p)) && p.value == 0 && check_row(p.y,p,num,symbol) }
+            if last.all? { |x| x.send(flip(symbol)) == last.first.send(flip(symbol)) } && last.count == 2 && @points.select { |p| p.value == num && p.send(flip(symbol)) == last.first.send(flip(symbol)) }.count == 0
+              final = arr + last 
+              places = final.map { |m| m.send(symbol) }.uniq
+              remaining_points.select { |p| places.include?(p.send(symbol)) && (!final.include?(p)) }.each do |poi|
+                poi.nums = poi.nums - [num]
+              end
             end
           end
         end
-      end
-    end
-    (0..8).each do |row|
-      (1..9).each do |num|
-        first = remaining_points.select { |p|  p.x == row && p.nums.include?(num)  && p.nums.count >= 2}
-        if first.count == 2
-          match = remaining_points.select { |p| p.x != row && p.nums.include?(num) && first.map { |a| a.y }.include?(p.y) && p.nums.count >= 2}
-            all = first + match
-            if match.count == 2 &&  @points.none? { |n| all.map{ |a| a.y }.include?(n.y) && n.value == num }
-            all.each do |c|
-              choice = @points.select { |s| s.value == 0 && s.y == c.y && (!all.include?(s)) }
-              choice.each do |ch|
-                puts "AAAAAAAAAAAAAAAAAAAA" * 300 if ch.x == 8 && ch.y == 6
-                puts num
-                ch.nums = (ch.nums - [num]) 
-              end 
-            end
-          end
-        end
-      end
-    end
-  end
-
-
-  def intersection_removal
-    #1
-    @points.select { |po| po.value == 0 }.each do |point|
-      [:y, :x].each do |symbol|
-        one = @points.select { |p| p.value == 0 && point.send(symbol) == p.send(symbol) && point.box == p.box && (p.nums & point.nums).count > 0 }
-        one_remove = one.inject(point.nums) { |sum, a| sum = (sum & a.nums) }
-        if one.count > 1
-  @points.select { |poi| poi.value == 0 && poi.send(symbol) == point.send(symbol) && point.box != poi.box }.each do |numbers|
-             one_remove.each do |remove|
-               if @points.select { |p| point.box == p.box && p.nums.include?(remove) }.count == one.count
-                 numbers.nums = (numbers.nums - [remove])
-                 return 1
-               end
-            end  
-          end 
-        end 
-        @points.select { |p| p.value == 0 && point.box == p.box && (!one.include?(p)) && one.count > 1 }.each do |a|
-             one_remove.each do |remove|
-               if @points.select { |p| p.value == 0 && p.box != point.box && p.send(symbol) == point.send(symbol) && (p.nums.include?(remove)) }.count == 0
-                  a.nums = (a.nums - [remove])  
-                  return 1
-               end
-             end
-           end
       end 
     end
-    return 0
+    
   end
 
-  def pointing_pairs_box_line_reduction
-    @points.select { |p|  p.value == 0 }.each do |point|
-      9.downto(1).each do |num|
-          next if !point.nums.include?(num)
-        [:x, :y].each do |symbol|
-          compare = @points.select { |p| p.value == 0 && p.send(symbol) == point.send(symbol) && point.box == p.box && p.nums.include?(num) }
-          next unless compare.include?(point)
-          if compare.count > 1
-            @points.select { |p| p.value == 0 && point.send(symbol) == p.send(symbol) && p.box != point.box }.each do |remove|
-              if @points.select { |p| p.value == 0 && p.box == point.box && p.nums.include?(num) }.count == compare.count 
-                if @points.select { |p| p.value == num && p.box == point.box }.count == 0
-                  remove.nums = (remove.nums - [num])
-                  fill_in
-                  return 1
-                end 
-              end
-            end
-            @points.select { |p| p.value == 0 && p.box == point.box && (!compare.include?(p)) && p.nums.include?(num) }.each do |remove|
-              if @points.select { |p|  (p.value == 0  && p.box != point.box && p.send(symbol) == point.send(symbol) && (p.nums.include?(num))) }.count == 0 
-                if @points.select { |p| p.value == num && p.send(symbol) == point.send(symbol) && p.box != point.box }.count == 0
-                  remove.nums = (remove.nums - [num]) 
-                  fill_in
-                  return 1
-                end
-              end
-            end  
-          end
-        end
-      end
-    end
-    return 0
+  def check_row(row, point, num, symbol)
+    a = @points.select { |p| p.send(flip(symbol)) == row && p != point  }.map { |x| x.nums }.flatten
+    a.count(num) <= 1
   end
+
+  def flip(n)
+    if n == :y
+      :x
+    else 
+      :y
+    end
+  end
+
 end

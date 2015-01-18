@@ -35,10 +35,11 @@ class Point
   end
 
   def nums=(n)
-    if value == 0
+    if @value == 0
       @nums = n
       if @nums.count == 1
         @value = @nums.first
+        @nums = [@value]
       end
     end
   end
