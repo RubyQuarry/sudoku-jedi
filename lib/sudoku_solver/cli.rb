@@ -1,5 +1,5 @@
 require 'thor'
-require 'grid'
+require_relative 'grid'
 class CLI < Thor
 
   desc "solve", "Solves a sudoku puzzle"
