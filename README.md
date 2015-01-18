@@ -51,3 +51,9 @@ will result in your printed answer in the terminal.
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+
+
+####Questions, Concerns, Flat out mistakes?  Feel free to contact me.
+
+> [Contact me (applejuiceteaching@gmail.com)](mailto:applejuiceteaching@gmail.com)
