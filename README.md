@@ -23,7 +23,26 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Sudoku-Jedi can solve sodokus for you.  All you have to do is put a sudoku in a text with zeros marked as the 
+empty cells for example: a.txt
+```
+043080250
+600000000
+000001094
+900004070
+000608000
+010200003
+820500000
+000000005
+034090710
+```
+
+Then calling
+```
+sudoku-jedi solve a.txt
+```
+will result in your printed answer in the terminal.
+
 
 ## Contributing
 
