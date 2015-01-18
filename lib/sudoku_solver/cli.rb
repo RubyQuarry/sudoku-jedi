@@ -2,7 +2,7 @@ require 'thor'
 require_relative 'grid'
 class CLI < Thor
 
-  desc "solve", "Solves a sudoku puzzle"
+  desc "solve [FILE NAME]", "Solves a sudoku puzzle from a text file"
   def solve(file_name)
   	file = File.open(file_name,"rb")
   	contents = file.read.gsub("\n","")
