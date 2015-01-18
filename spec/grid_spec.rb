@@ -40,7 +40,7 @@ describe Grid do
       @sec_grid.solve
       expect(@sec_grid.print_values).to eql("671438529392715864854926137518374296726859341943261785487593612269187453135642978")
     end
-=begin
+    
      it "solves a hard puzzle" do
        @hard_grid = Grid.new(%w{300200000
                                 000107000
@@ -51,10 +51,9 @@ describe Grid do
                                 009040301
                                 000702000
                                 000008006})
-       @hard_grid.point_solution
+       @hard_grid.solve
        expect(@hard_grid.print_values).to eql("351286497492157638786934512275469183938521764614873259829645371163792845547318926")
     end
-
     it "solves x-wing puzzle" do 
       @x_grid = Grid.new(%w{043080250
                             600000000
@@ -66,10 +65,8 @@ describe Grid do
                             000000005
                             034090710})
       puts "hard grid"
-       @x_grid.point_solution
-       puts "-----------"
+       @x_grid.solve
        expect(@x_grid.print_values).to eql("143986257679425381285731694962354178357618942418279563821567439796143825534892716")
     end
-=end
   end
 end
