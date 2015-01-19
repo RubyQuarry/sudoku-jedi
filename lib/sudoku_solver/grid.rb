@@ -1,4 +1,3 @@
-require_relative 'box'
 require_relative 'point'
 require 'set'
 
@@ -12,7 +11,7 @@ class Grid
       end
     end
     
-    @points.select { |po| po.value == 0 }.each do |poi|
+    remaining_points.each do |poi|
       poi.nums = Array(1..9) - (get_box(poi.box) + get_row(poi.y) + get_column(poi.x))
     end
   end
@@ -191,8 +190,6 @@ class Grid
 
   def hidden_pairs
     all_naked_pairs
-#   @points.select { |p| p.x == 6  &&  p.y == 4  }.first.nums =  @points.select { |p| p.x == 6  &&  p.y == 4  }.first.nums - [1,5]
-#   @points.select { |p| p.x == 6  &&  p.y == 6  }.first.nums =  @points.select { |p| p.x == 6  &&  p.y == 6  }.first.nums - [3,6]
     
     remaining_points.each do |point|
       next if point.nums.count <= 1
@@ -219,12 +216,17 @@ class Grid
         [:x, :y].each do |symbol|
           arr = @points.select{ |p| p.nums.include?(num) && p.send(flip(symbol)) == point.send(flip(symbol)) && p.value == 0  }
           if arr.count == 2 && @points.select { |p| p.value == num && p.send(flip(symbol)) == point.send(flip(symbol)) }.count == 0
-            last = @points.select { |p| p.nums.include?(num) && arr.map{ |a| a.send(symbol) }.include?(p.send(symbol)) && (!arr.include?(p)) && p.value == 0 && check_row(p.y,p,num,symbol) }
-            if last.all? { |x| x.send(flip(symbol)) == last.first.send(flip(symbol)) } && last.count == 2 && @points.select { |p| p.value == num && p.send(flip(symbol)) == last.first.send(flip(symbol)) }.count == 0
-              final = arr + last 
-              places = final.map { |m| m.send(symbol) }.uniq
-              remaining_points.select { |p| places.include?(p.send(symbol)) && (!final.include?(p)) }.each do |poi|
-                poi.nums = poi.nums - [num]
+            last = @points.select { |p| p.nums.include?(num) &&
+                                    arr.map{ |a| a.send(symbol) }.include?(p.send(symbol)) &&
+                                    (!arr.include?(p)) &&
+                                    p.value == 0 && check_row(p.y,p,num,symbol) }
+            if last.all? { |x| x.send(flip(symbol)) == last.first.send(flip(symbol)) } &&
+               last.count == 2 && 
+               @points.select { |p| p.value == num && p.send(flip(symbol)) == last.first.send(flip(symbol)) }.count == 0
+                 final = arr + last 
+                 places = final.map { |m| m.send(symbol) }.uniq
+                 remaining_points.select { |p| places.include?(p.send(symbol)) && (!final.include?(p)) }.each do |poi|
+                 poi.nums = poi.nums - [num]
               end
             end
           end

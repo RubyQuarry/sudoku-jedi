@@ -1,4 +1,3 @@
-require_relative 'container'
 require 'set'
 
 class Point
@@ -15,7 +14,6 @@ class Point
   def nums
     @nums.sort
   end
-
 
   def share(point)
     a = []
@@ -62,10 +60,5 @@ class Point
     @position.y
   end
     
-  def blank_spaces
-    [(position.y / 3) * 3 + (position.x / 3), position.y, position.x]
-  end
-
-
 end
 
