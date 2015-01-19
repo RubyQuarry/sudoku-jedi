@@ -121,7 +121,7 @@ class Grid
           compare_points(possible).each do |type|
             found = remaining_points.select { |p| p.send(type) == point.send(type) && (!possible.include?(p))  }
             found.each do |f|
-              f.nums = (f.nums - point.nums)
+              f.nums -= point.nums 
             end
           end
         end
@@ -139,7 +139,7 @@ class Grid
             if @points.select { |p| p.box == point.box && (!possible.include?(p)) && p.include?(num) }.count == 0
               remove = remaining_points.select { |p| p.box != point.box && p.send(symbol) == point.send(symbol) && p.include?(num) }
               remove.each do |r|
-                r.nums = (r.nums - [num])
+                r.nums -= [num]
               end
             end
           end
@@ -158,7 +158,7 @@ class Grid
             if @points.select { |p| p.send(symbol) == point.send(symbol) && (!possible.include?(p)) && p.include?(num) }.count == 0
               remove = remaining_points.select { |p| p.box == point.box && p.include?(num) && (!possible.include?(p)) }
               remove.each do |r|
-                r.nums = (r.nums - [num])
+                r.nums -= [num]
               end
             end
           end
@@ -226,7 +226,7 @@ class Grid
                  final = arr + last 
                  places = final.map { |m| m.send(symbol) }.uniq
                  remaining_points.select { |p| places.include?(p.send(symbol)) && (!final.include?(p)) }.each do |poi|
-                 poi.nums = poi.nums - [num]
+                 poi.nums -=  [num]
               end
             end
           end
