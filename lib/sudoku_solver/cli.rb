@@ -1,5 +1,5 @@
 require 'thor'
-require_relative 'grid'
+require 'sudoku_solver/grid'
 class CLI < Thor
 
   desc "solve [FILE NAME]", "Solves a sudoku puzzle from a text file"

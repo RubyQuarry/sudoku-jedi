@@ -1,4 +1,4 @@
-require_relative 'point'
+require 'sudoku_solver/point'
 require 'set'
 
 class Grid
@@ -187,7 +187,7 @@ class Grid
     a
   end
 
-
+  # Does not work for now
   def hidden_pairs
     all_naked_pairs
     
