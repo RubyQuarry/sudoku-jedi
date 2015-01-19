@@ -4,6 +4,8 @@
 [![Gem Version](https://badge.fury.io/rb/sudoku-jedi.svg)](http://badge.fury.io/rb/sudoku-jedi)
 
 Currently solves easy to moderate sudoku puzzles in a flash!
+This sudoku solver implementation uses solution tactics such as naked pairs, hidden pairs, box/line reduction, and X-wing strategies for tougher puzzles.
+You can read about these techniques [here](http://www.sudokuwiki.org/sudoku.htm)
 
 ## Installation
 
