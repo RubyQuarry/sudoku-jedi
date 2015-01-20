@@ -88,12 +88,20 @@ class Grid
     remaining_points.each do |point|
       components.each do |symbol|
         point.nums.each do |num|
-          if @points.select { |p| p.include?(num) && p.send(symbol) == point.send(symbol) && p != point }.count == 0
+          if contains_number_in_unit(point, symbol, num).count == 0
             point.value = num
           end
         end
       end
     end 
+  end
+
+  def contains_number_in_unit(point, symbol, num)
+    @points.select do |p|
+      p.include?(num) &&
+      p.send(symbol) == point.send(symbol) &&
+      p != point
+    end
   end
 
   def solve
@@ -116,7 +124,7 @@ class Grid
     remaining_points.each do |point|
       next if point.nums.count <= 1
       components.each do |symbol|
-        possible = remaining_points.select { |p| p.subset?(point) && p != point && p.send(symbol) == point.send(symbol) && p.nums.count >= 2 }
+        possible = naked_pair_possibility(point, symbol)
         possible << point
         if possible.count == point.nums.count
           compare_points(possible).each do |type|
@@ -130,15 +138,24 @@ class Grid
     end
   end
 
+  def naked_pair_possibility(point, symbol)
+    remaining_points.select do |p|
+      p.subset?(point) &&
+      p.send(symbol) == point.send(symbol) &&
+      p.nums.count >= 2 &&
+      p != point
+    end
+  end
+
   def pointing_pairs
     all_naked_pairs
     remaining_points.each do |point|
       (1..9).each do |num|
         [:x, :y].each do |symbol|
-          possible = @points.select { |p| p.send(symbol) == point.send(symbol) && p.box == point.box && p.include?(num) }
+          possible = same_row_and_box(point, num, symbol)
           if possible.count >= 2
-            if @points.select { |p| p.box == point.box && (!possible.include?(p)) && p.include?(num) }.count == 0
-              remove = remaining_points.select { |p| p.box != point.box && p.send(symbol) == point.send(symbol) && p.include?(num) }
+            if same_box_differant_streak(point, num, symbol, possible).count == 0
+              remove = same_row_different_box(point, num, symbol)
               remove.each do |r|
                 r.nums -= [num]
               end
@@ -154,10 +171,10 @@ class Grid
     remaining_points.each do |point|
       (1..9).each do |num|
         [:x, :y].each do |symbol|
-          possible = remaining_points.select { |p| p.send(symbol) == point.send(symbol) && p.box == point.box && p.include?(num) }
+          possible = same_row_and_box(point, num, symbol)
           if possible.count >= 2
-            if @points.select { |p| p.send(symbol) == point.send(symbol) && (!possible.include?(p)) && p.include?(num) }.count == 0
-              remove = remaining_points.select { |p| p.box == point.box && p.include?(num) && (!possible.include?(p)) }
+            if same_box_differant_streak(point, num, symbol, possible).empty?
+              remove = same_box_differant_streak(point, num, :box, remaining_points)
               remove.each do |r|
                 r.nums -= [num]
               end
@@ -165,6 +182,30 @@ class Grid
           end
         end
       end
+    end
+  end
+
+  def same_box_differant_streak(point, num, symbol, possible, selection= @points)
+    selection.select do |p|
+      p.send(symbol) == point.send(symbol) &&
+      p.include?(num) &&
+      (!possible.include?(p))
+    end
+  end
+
+  def same_row_and_box(point, num, symbol)
+    remaining_points.select do |p|
+      p.send(symbol) == point.send(symbol) &&
+        p.box == point.box &&
+        p.include?(num)
+    end
+  end
+
+  def same_row_different_box(point, num, symbol)
+    remaining_points.select do |p|
+      p.send(symbol) == point.send(symbol) &&
+        p.box != point.box &&
+        p.include?(num)
     end
   end
 
@@ -269,7 +310,9 @@ class Grid
 
   def no_instance_other_number?(symbol, num)
     @arr.count == 2 &&
-    @points.select { |p| p.value == num && p.send(flip(symbol)) == point.send(flip(symbol)) }.zero?
+    @points.select do  |p| 
+      p.value == num && p.send(flip(symbol)) == point.send(flip(symbol))
+    end.empty?
   end
 
   def no_intstance_of_other_number_on_second_set?(last, symbol, num)
