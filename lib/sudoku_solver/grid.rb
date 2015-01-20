@@ -5,6 +5,7 @@ class Grid
   attr_accessor  :remaining_nums, :points
   def initialize(txt_file)
     @points = []
+    @arr = []
     txt_file.each_with_index do |text, row|
       text.split("").map(&:to_i).each_with_index do |num, col|
         @points << Point.new(row, col, num)
@@ -214,26 +215,65 @@ class Grid
     remaining_points.each do |point|
       point.nums.each do |num|
         [:x, :y].each do |symbol|
-          arr = @points.select{ |p| p.nums.include?(num) && p.send(flip(symbol)) == point.send(flip(symbol)) && p.value == 0  }
-          if arr.count == 2 && @points.select { |p| p.value == num && p.send(flip(symbol)) == point.send(flip(symbol)) }.count == 0
-            last = @points.select { |p| p.nums.include?(num) &&
-                                    arr.map{ |a| a.send(symbol) }.include?(p.send(symbol)) &&
-                                    (!arr.include?(p)) &&
-                                    p.value == 0 && check_row(p.y,p,num,symbol) }
-            if last.all? { |x| x.send(flip(symbol)) == last.first.send(flip(symbol)) } &&
-               last.count == 2 && 
-               @points.select { |p| p.value == num && p.send(flip(symbol)) == last.first.send(flip(symbol)) }.count == 0
-                 final = arr + last 
-                 places = final.map { |m| m.send(symbol) }.uniq
-                 remaining_points.select { |p| places.include?(p.send(symbol)) && (!final.include?(p)) }.each do |poi|
-                 poi.nums -=  [num]
-              end
+          @arr = first_row(symbol, num, point)
+          if first_x_wing_check(point, num, symbol)
+            last = second_x_wing_set(symbol, num)
+            if no_intstance_of_other_number_on_second_set?(last, symbol, num)
+              delete_opposite_matches(last, symbol, num)
             end
           end
         end
       end 
     end
-    
+  end
+
+
+  def first_x_wing_check(point, num, symbol)
+    @arr.count == 2 &&
+      @points.select do |p|
+          p.value == num &&
+          p.send(flip(symbol)) == point.send(flip(symbol))
+      end.empty?    
+  end
+  
+
+  def delete_opposite_matches(last, symbol, num)
+    final = @arr + last
+    places = final.map { |m| m.send(symbol) }.uniq
+    remaining_points
+      .select { |p| places.include?(p.send(symbol)) && (!final.include?(p)) }
+      .each { |poi| poi.nums  -= [num] }
+  end
+
+  def first_row(symbol, num, point)
+    @points.select do |p|
+      p.nums.include?(num) &&
+        p.send(flip(symbol)) == point.send(flip(symbol)) && 
+        p.value == 0
+    end
+  end
+
+  def second_x_wing_set(symbol, num)
+    @points.select do |p|
+      p.nums.include?(num) &&
+        @arr.map { |a| a.send(symbol) }.include?(p.send(symbol)) &&
+        (!@arr.include?(p)) &&
+        p.value == 0 && check_row(p.y, p, num, symbol)
+    end
+  end
+
+
+  def no_instance_other_number?(symbol, num)
+    @arr.count == 2 &&
+    @points.select { |p| p.value == num && p.send(flip(symbol)) == point.send(flip(symbol)) }.zero?
+  end
+
+  def no_intstance_of_other_number_on_second_set?(last, symbol, num)
+    last.all? { |x| x.send(flip(symbol)) == last.first.send(flip(symbol)) } &&
+                    last.count == 2 &&
+                    @points.select do |p| 
+                      p.value == num && p.send(flip(symbol)) == last.first.send(flip(symbol)) 
+                    end.empty?
   end
 
   def check_row(row, point, num, symbol)
