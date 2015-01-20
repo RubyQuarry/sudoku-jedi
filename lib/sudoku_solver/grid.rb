@@ -215,15 +215,19 @@ class Grid
     remaining_points.each do |point|
       point.nums.each do |num|
         [:x, :y].each do |symbol|
-          @arr = first_row(symbol, num, point)
-          if first_x_wing_check(point, num, symbol)
-            last = second_x_wing_set(symbol, num)
-            if no_intstance_of_other_number_on_second_set?(last, symbol, num)
-              delete_opposite_matches(last, symbol, num)
-            end
-          end
+          x_wing_procedure(symbol, point, num)
         end
-      end 
+      end
+    end 
+  end
+
+  def x_wing_procedure(symbol, point, num)
+    @arr = first_row(symbol, num, point)
+    if first_x_wing_check(point, num, symbol)
+      last = second_x_wing_set(symbol, num)
+      if no_intstance_of_other_number_on_second_set?(last, symbol, num)
+        delete_opposite_matches(last, symbol, num)
+      end
     end
   end
 
@@ -282,11 +286,7 @@ class Grid
   end
 
   def flip(n)
-    if n == :y
-      :x
-    else 
-      :y
-    end
+    n == :y ? :x : :y
   end
 
 end
