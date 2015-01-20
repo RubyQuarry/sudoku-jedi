@@ -171,15 +171,19 @@ class Grid
     remaining_points.each do |point|
       (1..9).each do |num|
         [:x, :y].each do |symbol|
-          possible = same_row_and_box(point, num, symbol)
-          if possible.count >= 2
-            if same_box_differant_streak(point, num, symbol, possible).empty?
-              remove = same_box_differant_streak(point, num, :box, remaining_points)
-              remove.each do |r|
-                r.nums -= [num]
-              end
-            end
-          end
+          reduce(point, num, symbol)
+        end
+      end
+    end
+  end
+  
+  def reduce(point, num, symbol)
+    possible = same_row_and_box(point, num, symbol)
+    if possible.count >= 2
+      if same_box_differant_streak(point, num, symbol, possible).empty?
+        remove = same_box_differant_streak(point, num, :box, remaining_points)
+        remove.each do |r|
+          r.nums -= [num]
         end
       end
     end
@@ -196,16 +200,16 @@ class Grid
   def same_row_and_box(point, num, symbol)
     remaining_points.select do |p|
       p.send(symbol) == point.send(symbol) &&
-        p.box == point.box &&
-        p.include?(num)
+      p.box == point.box &&
+      p.include?(num)
     end
   end
 
   def same_row_different_box(point, num, symbol)
     remaining_points.select do |p|
       p.send(symbol) == point.send(symbol) &&
-        p.box != point.box &&
-        p.include?(num)
+      p.box != point.box &&
+      p.include?(num)
     end
   end
 
@@ -293,24 +297,25 @@ class Grid
   def first_row(symbol, num, point)
     @points.select do |p|
       p.nums.include?(num) &&
-        p.send(flip(symbol)) == point.send(flip(symbol)) && 
-        p.value == 0
+      p.send(flip(symbol)) == point.send(flip(symbol)) && 
+      p.value == 0
     end
   end
 
   def second_x_wing_set(symbol, num)
     @points.select do |p|
       p.nums.include?(num) &&
-        @arr.map { |a| a.send(symbol) }.include?(p.send(symbol)) &&
-        (!@arr.include?(p)) &&
-        p.value == 0 && check_row(p.y, p, num, symbol)
+      @arr.map { |a| a.send(symbol) }.include?(p.send(symbol)) &&
+      (!@arr.include?(p)) &&
+      p.value == 0 && 
+      check_row(p.y, p, num, symbol)
     end
   end
 
 
   def no_instance_other_number?(symbol, num)
     @arr.count == 2 &&
-    @points.select do  |p| 
+    @points.select do |p| 
       p.value == num && p.send(flip(symbol)) == point.send(flip(symbol))
     end.empty?
   end
@@ -319,7 +324,8 @@ class Grid
     last.all? { |x| x.send(flip(symbol)) == last.first.send(flip(symbol)) } &&
                     last.count == 2 &&
                     @points.select do |p| 
-                      p.value == num && p.send(flip(symbol)) == last.first.send(flip(symbol)) 
+                      p.value == num &&
+                      p.send(flip(symbol)) == last.first.send(flip(symbol)) 
                     end.empty?
   end
 
