@@ -1,5 +1,5 @@
 # Sudoku Jedi
-[![Build Status](https://travis-ci.org/RubyQuarry/sudoku_solver.svg?branch=master)](https://travis-ci.org/RubyQuarry/sudoku_solver)
+[![Build Status](https://travis-ci.org/RubyQuarry/sudoku-jedi.svg?branch=master)](https://travis-ci.org/RubyQuarry/sudoku-jedi)
 [![Coverage Status](https://coveralls.io/repos/RubyQuarry/sudoku_solver/badge.png)](https://coveralls.io/r/RubyQuarry/sudoku_solver)
 [![Gem Version](https://badge.fury.io/rb/sudoku-jedi.svg)](http://badge.fury.io/rb/sudoku-jedi)
 
