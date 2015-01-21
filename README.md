@@ -11,6 +11,7 @@ You can read about these techniques [here](http://www.sudokuwiki.org/sudoku.htm)
 
 Add this line to your application's Gemfile:
 
+
 ```ruby
 gem 'sudoku-jedi'
 ```

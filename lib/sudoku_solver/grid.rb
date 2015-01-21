@@ -330,7 +330,7 @@ class Grid
   end
 
   def check_row(row, point, num, symbol)
-    a = @points.select { |p| p.send(flip(symbol)) == row && p != point  }.map { |x| x.nums }.flatten
+    a = @points.select { |p| p.send(flip(symbol)) == row && p != point  }.flat_map { |x| x.nums }
     a.count(num) <= 1
   end
 
