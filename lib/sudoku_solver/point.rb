@@ -1,14 +1,16 @@
 require 'set'
 
 class Point
-  attr_accessor :box, :position, :nums, :value 
+  attr_accessor :box, :x, :y, :nums, :value 
 
+  # Represents a single point on a sudoku board
+  # rows, boxes, and columns can vary from 0 to 8
   def initialize(y=0, x=0, value = 0)
     @value = value
-    Struct.new("Coordinate", :x, :y) if !Struct::const_defined? "Coordinate"
-    @position = Struct::Coordinate.new(x, y)
+    @x = x
+    @y = y
     @nums = []
-    @box = (position.y / 3) * 3 + (position.x / 3) 
+    @box = (y / 3) * 3 + (x / 3) 
   end
 
   def nums
@@ -51,14 +53,5 @@ class Point
     nums.to_set.subset?(point.nums.to_set)
   end
 
-
-  def x
-    @position.x
-  end
-
-  def y
-    @position.y
-  end
-    
 end
 
