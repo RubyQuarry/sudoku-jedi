@@ -154,7 +154,7 @@ class Grid
         [:x, :y].each do |symbol|
           possible = same_row_and_box(point, num, symbol)
           if possible.count >= 2
-            if same_box_differant_streak(point, num, symbol, possible).count == 0
+            if same_box_differant_streak(point, num, symbol, possible).empty?
               remove = same_row_different_box(point, num, symbol)
               remove.each do |r|
                 r.nums -= [num]
@@ -214,7 +214,7 @@ class Grid
   end
 
   def is_solved?
-    @points.select{ |p| p.value == 0 }.count == 0
+    @points.select{ |p| p.value == 0 }.empty?
   end
 
   def print_values_formatted
@@ -298,7 +298,7 @@ class Grid
     @points.select do |p|
       p.nums.include?(num) &&
       p.send(flip(symbol)) == point.send(flip(symbol)) && 
-      p.value == 0
+      p.value.zero?
     end
   end
 
@@ -307,7 +307,7 @@ class Grid
       p.nums.include?(num) &&
       @arr.map { |a| a.send(symbol) }.include?(p.send(symbol)) &&
       (!@arr.include?(p)) &&
-      p.value == 0 && 
+      p.value.zero? && 
       check_row(p.y, p, num, symbol)
     end
   end
