@@ -18,11 +18,11 @@ class Point
   end
 
   def share(point)
-    a = []
-    a << :box if @box == point.box
-    a << :x if x == point.x
-    a << :y if y == point.y
-    a
+    [].tap do |z|
+      z << :box if @box == point.box
+      z << :x if x == point.x
+      z << :y if y == point.y
+    end
   end
 
   def value=(val)

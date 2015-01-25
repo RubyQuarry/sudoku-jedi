@@ -17,6 +17,10 @@ class Grid
     end
   end
 
+  def components
+    [:x, :y, :box]
+  end
+
   def print_values_formatted
     puts "SOLUTION"
     @points.each_slice(9) do |s|
@@ -25,9 +29,9 @@ class Grid
   end
 
   def print_values
-    a = @points.map { |p| p.value}.join
-    puts a 
-    a
+    @points.map { |p| p.value }.join.tap do |x|
+      puts x
+    end
   end
 
   def get_box(num)
@@ -50,38 +54,14 @@ class Grid
     point.nums = point.nums - (get_box(point.box) + get_row(point.y) + get_column(point.x))
   end 
 
-  def flat_points
-    @points.select { |p| p.value == 0 }
-  end
-
-  def get_values(arr)
-    arr.map { |b| b.value }
-  end
-
-  def update_points 
-    @points.select { |po| po.value == 0 }.each do |poi|
-      find_diff(poi)
-    end
-    (0..8).each do |num|
-      [:box, :x, :y].each do |fields|
-        yield @points.select { |p| p.send(fields) == num }
-      end
-    end
-  end 
-
   def fill_in
     remaining_points.each do |p|
       find_diff(p)
     end
   end
 
-
   def remaining_points
     @points.select { |p| p.value == 0 }
-  end
-
-  def components
-    [:x, :y, :box]
   end
 
   def pinned_points
