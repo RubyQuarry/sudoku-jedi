@@ -22,7 +22,7 @@ class Point
     a << :box if @box == point.box
     a << :x if x == point.x
     a << :y if y == point.y
-    return a
+    a
   end
 
   def value=(val)
@@ -43,7 +43,6 @@ class Point
       end
     end
   end
-
 
   def include?(num)
     nums.include?(num) || (num == value)

@@ -128,8 +128,8 @@ class Grid
         possible << point
         if possible.count == point.nums.count
           compare_points(possible).each do |type|
-            found = remaining_points.select { |p| p.send(type) == point.send(type) && (!possible.include?(p))  }
-            found.each do |f|
+            found = same_unit_exclusion(type, possible, point)
+              found.each do |f|
               f.nums -= point.nums 
             end
           end
@@ -188,27 +188,34 @@ class Grid
       end
     end
   end
-
-  def same_box_differant_streak(point, num, symbol, possible, selection= @points)
-    selection.select do |p|
-      p.send(symbol) == point.send(symbol) &&
-      p.include?(num) &&
+  
+  def same_unit_exclusion(unit, possible, point)
+    remaining_points.select do |p|
+      p.send(unit) == point.send(unit) &&
       (!possible.include?(p))
     end
+  end
+  def same_box_differant_streak(point, num, symbol, possible, selection= @points)
+    selection.select do |p|
+      p.include?(num) 
+    end & same_unit_exclusion(symbol, possible, point)
   end
 
   def same_row_and_box(point, num, symbol)
     remaining_points.select do |p|
-      p.send(symbol) == point.send(symbol) &&
-      p.box == point.box &&
-      p.include?(num)
-    end
+      p.box == point.box 
+    end & same_unit_inclusion(symbol, point, num)
   end
 
   def same_row_different_box(point, num, symbol)
     remaining_points.select do |p|
-      p.send(symbol) == point.send(symbol) &&
-      p.box != point.box &&
+      p.box != point.box 
+    end & same_unit_inclusion(symbol, point, num)
+  end
+
+  def same_unit_inclusion(unit, point, num)
+    remaining_points.select! do |p|
+      p.send(unit) == point.send(unit) &&
       p.include?(num)
     end
   end
