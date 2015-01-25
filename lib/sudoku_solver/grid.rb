@@ -12,8 +12,8 @@ class Grid
       end
     end
     
-    remaining_points.each do |poi|
-      poi.nums = Array(1..9) - (get_box(poi.box) + get_row(poi.y) + get_column(poi.x))
+    remaining_points.each do |p|
+      p.nums = Array(1..9) - possibilities_of_all_units(p)
     end
   end
 
@@ -48,6 +48,10 @@ class Grid
 
   def fill_row(num)
     @points.select { |point| point.x == num  }
+  end
+
+  def possibilities_of_all_units(poi)
+    (get_box(poi.box) + get_row(poi.y) + get_column(poi.x))
   end
 
   def find_diff(point)
