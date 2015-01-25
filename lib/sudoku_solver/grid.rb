@@ -233,11 +233,11 @@ class Grid
 
 
   def compare_points(arr)
-    a = []
-    a << :x if arr.all? { |w| w.x == arr.first.x }
-    a << :y if arr.all? { |s| s.y == arr.first.y }
-    a << :box if arr.all? { |t| t.box == arr.first.box }
-    a
+    [].tap do |z|
+      z << :x if arr.all? { |w| w.x == arr.first.x }
+      z << :y if arr.all? { |s| s.y == arr.first.y }
+      z << :box if arr.all? { |t| t.box == arr.first.box }
+    end
   end
 
   # Does not work for now
