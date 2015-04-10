@@ -4,6 +4,11 @@ require 'set'
 class Grid
   attr_accessor  :remaining_nums, :points
   def initialize(txt_file)
+    read_file(txt_file)
+    simple_reduce
+  end
+
+  def read_file(txt_file)
     @points = []
     @arr = []
     txt_file.each_with_index do |text, row|
@@ -11,7 +16,9 @@ class Grid
         @points << Point.new(row, col, num)
       end
     end
-    
+  end
+
+  def simple_reduce
     remaining_points.each do |p|
       p.nums = Array(1..9) - possibilities_of_all_units(p)
     end
@@ -28,6 +35,7 @@ class Grid
     end
   end
 
+  # testing helper function
   def print_values
     @points.map { |p| p.value }.join.tap do |x|
       puts x
@@ -88,6 +96,7 @@ class Grid
     end
   end
 
+  # Main game loop attempting various sudoku techniques
   def solve
     while !is_solved?
       all_naked_pairs
