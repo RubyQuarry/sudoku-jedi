@@ -322,11 +322,11 @@ class Grid
 
   def no_intstance_of_other_number_on_second_set?(last, symbol, num)
     last.all? { |x| x.send(flip(symbol)) == last.first.send(flip(symbol)) } &&
-                    last.count == 2 &&
-                    @points.select do |p| 
-                      p.value == num &&
-                      p.send(flip(symbol)) == last.first.send(flip(symbol)) 
-                    end.empty?
+      last.count == 2 &&
+      @points.select do |p| 
+        p.value == num &&
+        p.send(flip(symbol)) == last.first.send(flip(symbol)) 
+      end.empty?
   end
 
   def check_row(row, point, num, symbol)
